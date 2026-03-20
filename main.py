@@ -1,4 +1,4 @@
-from fastapi import FastAP:I
+from fastapi import FastAP:
 from models import Product
 
 app=FastAPI()
