@@ -1,7 +1,11 @@
-from fastapi import FastAP:
+from fastapi import FastAPI
 from models import Product
+from database import session,engine
+from sqlalchemy.orm import Session
+import dbmodels
 
 app=FastAPI()
+dbmodels.Base.metadata.create_all(bind=engine)
 
 @app.get("/")
 def greet():
@@ -12,9 +16,27 @@ def greet():
 products=[
         Product(id=1,name="laptop",description="gaming laptop",price=999,quantity=6),Product(id=2,name="Phone",description="Mobile Phone",price=99,quantity=4)
         ]
+def get_db(db:Session=Depends(get_db)):
+    db=session()
+    try:
+        yeild db
+    finally:
+        db.close()
+
+def init_db():
+    db=session()
+    count=db.query(dbmodels.Product).count
+    if count==0:
+      for product in products:
+        db.add(dbmodels.Product(**product.model_dump()))
+      db.commit()
+
+init_db()
+
 
 @app.get("/products")
 def gettall():
+    #db=session()
     return products
 
 @app.get("/product/{id}")
